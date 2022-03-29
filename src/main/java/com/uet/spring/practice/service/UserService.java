@@ -23,12 +23,7 @@ public class UserService {
     }
 
     public void save(User user) {
-        try {
-            userRepository.save(user);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("ERROR: " + e.getMessage());
-        }
+        userRepository.save(user);
     }
 
     public void update(User user) throws NotFoundUserException {

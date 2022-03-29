@@ -5,6 +5,7 @@ import com.uet.spring.practice.model.validation.StringSecurityConstraint;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -20,7 +21,7 @@ public abstract class UserField implements Serializable {
     protected int id;
 
     @NotNull
-    @Range(min = 1, max = 15)
+    @Range(min = 1, max = 15, message = "Age is required from 1 to 15")
     protected int age;
 
     @NotNull
@@ -33,6 +34,7 @@ public abstract class UserField implements Serializable {
     @Enumerated(EnumType.STRING)
     @NotNull
     @Column(length = 10)
+    @NotBlank
     protected CustomField.Grade grade;
 
     //============[ Getter, Setter Method ]=============

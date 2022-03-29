@@ -5,10 +5,12 @@ import com.uet.spring.practice.model.user.User;
 import com.uet.spring.practice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,28 +21,42 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("")
-    public List<User> list() {
-        return userService.getAll();
-    }
+    public ResponseEntity<?> list(@RequestParam("name") Optional<String> nameOpt) {
+        var response = ResponseEntity.status(200);
 
-    @GetMapping("/{name}")
-    public Optional<User> getByName(@PathVariable("name") String name) {
-        return userService.getByName(name);
+        var namedOpt = nameOpt.map(name -> {
+            var userOpt = userService.getByName(name);
+
+            if (userOpt.isPresent()) {
+                return response.body(userOpt.get());
+            } else {
+                return response.body("");
+            }
+        });
+
+        if (nameOpt.isPresent()) {
+            return namedOpt.get();
+        } else {
+            return response.body(userService.getAll());
+        }
     }
 
     @PostMapping("")
-    public void create(@RequestBody User user) {
+    public ResponseEntity create(@Valid @RequestBody User user) {
         userService.save(user);
+        return ResponseEntity.status(201).body(null);
     }
 
     @PutMapping("")
-    public void update(@RequestBody User user) throws NotFoundUserException {
+    public ResponseEntity update(@Valid @RequestBody User user) throws NotFoundUserException {
         userService.update(user);
+        return ResponseEntity.status(201).body(null);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") int userId) {
+    public ResponseEntity delete(@PathVariable("id") int userId) {
         userService.delete(userId);
+        return ResponseEntity.status(201).body(null);
     }
 
     //============[ Only Local ]=========================
