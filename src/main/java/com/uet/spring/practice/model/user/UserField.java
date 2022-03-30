@@ -1,15 +1,21 @@
 package com.uet.spring.practice.model.user;
 
+import com.uet.spring.practice.model.book.Book;
 import com.uet.spring.practice.model.validation.NameConstraint;
 import com.uet.spring.practice.model.validation.StringSecurityConstraint;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 
 @MappedSuperclass
+@Data
 public abstract class UserField implements Serializable {
 
     protected static final long serialVersionUID = -7049957706738879274L;
@@ -34,40 +40,10 @@ public abstract class UserField implements Serializable {
     @Enumerated(EnumType.STRING)
     @NotNull
     @Column(length = 10)
-    @NotBlank
     protected CustomField.Grade grade;
 
-    //============[ Getter, Setter Method ]=============
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public CustomField.Grade getGrade() {
-        return grade;
-    }
-
-    public void setGrade(CustomField.Grade grade) {
-        this.grade = grade;
-    }
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private List<Book> books;
 }

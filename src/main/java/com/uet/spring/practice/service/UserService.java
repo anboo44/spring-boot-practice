@@ -14,8 +14,15 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public Optional<User> getByName(String name) {
-        return userRepository.findByName(name);
+    public Optional<User> getByName(String name, Optional<Integer> verOpt) {
+        return verOpt.map(ver -> {
+            switch (ver) {
+                case 2: return userRepository.findByNameV2(name);
+                case 3: return userRepository.findByNameV3(name);
+
+                default: return userRepository.findByName(name);
+            }
+        }).orElseGet(() -> userRepository.findByName(name));
     }
 
     public List<User> getAll() {

@@ -21,11 +21,11 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("")
-    public ResponseEntity<?> list(@RequestParam("name") Optional<String> nameOpt) {
+    public ResponseEntity<?> list(@RequestParam("name") Optional<String> nameOpt, @RequestParam("ver") Optional<Integer> verOpt) {
         var response = ResponseEntity.status(200);
 
         var namedOpt = nameOpt.map(name -> {
-            var userOpt = userService.getByName(name);
+            var userOpt = userService.getByName(name, verOpt);
 
             if (userOpt.isPresent()) {
                 return response.body(userOpt.get());
