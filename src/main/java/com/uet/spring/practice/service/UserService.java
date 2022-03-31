@@ -4,10 +4,13 @@ import com.uet.spring.practice.exception.NotFoundUserException;
 import com.uet.spring.practice.model.user.User;
 import com.uet.spring.practice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -26,13 +29,14 @@ public class UserService {
     }
 
     public List<User> getAll() {
-        return (List<User>) userRepository.findAll();
+        return userRepository.findAll(PageRequest.of(0,2)).get().collect(Collectors.toList());
     }
 
     public void save(User user) {
         userRepository.save(user);
     }
 
+    @Transactional
     public void update(User user) throws NotFoundUserException {
         var userJDBC = userRepository.findById(user.getId());
 

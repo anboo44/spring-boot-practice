@@ -4,13 +4,16 @@ import com.uet.spring.practice.model.user.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "book")
-public class Book {
+public class Book implements Serializable {
+
+    private static final long serialVersionUID = 11235L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

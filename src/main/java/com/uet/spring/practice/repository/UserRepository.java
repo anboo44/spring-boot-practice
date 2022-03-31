@@ -1,15 +1,15 @@
 package com.uet.spring.practice.repository;
 
 import com.uet.spring.practice.model.user.User;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository extends PagingAndSortingRepository<User, Integer> {
     Optional<User> findByName(String name);
 
     @Query("SELECT u FROM User u WHERE u.name = ?1")

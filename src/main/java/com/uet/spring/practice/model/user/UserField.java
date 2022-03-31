@@ -1,17 +1,22 @@
 package com.uet.spring.practice.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.uet.spring.practice.model.book.Book;
+import com.uet.spring.practice.model.tag.Tag;
 import com.uet.spring.practice.model.validation.NameConstraint;
 import com.uet.spring.practice.model.validation.StringSecurityConstraint;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @MappedSuperclass
@@ -39,11 +44,17 @@ public abstract class UserField implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    @Column(length = 10)
-    protected CustomField.Grade grade;
+    protected Grade grade;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<Book> books;
+    private List<Book> books = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SELECT)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JoinTable(name = "user_tag", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private List<Tag> tags;
 }
