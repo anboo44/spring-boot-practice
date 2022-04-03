@@ -1,13 +1,14 @@
 package com.uet.spring.practice.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonFilter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
+@JsonFilter(value = "HelloWorldFilter")
 public class HelloWorldDTO {
     private final String author = "Hung_Pham";
     private String message;
+    private int ver = 1;
 
     public HelloWorldDTO(String message) {
         this.message = message;

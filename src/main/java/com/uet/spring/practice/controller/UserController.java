@@ -8,6 +8,8 @@ import com.uet.spring.practice.repository.TagRepository;
 import com.uet.spring.practice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +20,11 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+
+
 @RestController
 @RequestMapping(path = "/api/v1/users")
 public class UserController {
@@ -27,7 +34,8 @@ public class UserController {
     @Autowired
     private TagRepository tagRepository;
 
-    @GetMapping("")
+    //xml response doesn't apply with `EntityModel`
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> list(@RequestParam("name") Optional<String> nameOpt, @RequestParam("ver") Optional<Integer> verOpt) {
         var response = ResponseEntity.status(200);
 
@@ -44,8 +52,22 @@ public class UserController {
         if (nameOpt.isPresent()) {
             return namedOpt.get();
         } else {
-            return response.body(userService.getAll());
+            return response.body(
+                userService.getAll().stream().map(user -> {
+                    // hypermedia link
+                    var resource = EntityModel.of(user);
+                    var selfLink = linkTo(methodOn(this.getClass()).list(Optional.empty(), Optional.empty()));
+                    var linkTo = linkTo(methodOn(this.getClass()).get(user.getId()));
+                    resource.add(selfLink.withRel("self"), linkTo.withRel("linkTo"));
+                    return resource;
+                })
+            );
         }
+    }
+
+    @GetMapping("/{uid}")
+    public User get(@PathVariable("uid") int uid) {
+        return userService.getById(uid).orElse(null);
     }
 
     @PostMapping("")

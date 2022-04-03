@@ -5,6 +5,7 @@ import com.uet.spring.practice.model.book.Book;
 import com.uet.spring.practice.model.tag.Tag;
 import com.uet.spring.practice.model.validation.NameConstraint;
 import com.uet.spring.practice.model.validation.StringSecurityConstraint;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

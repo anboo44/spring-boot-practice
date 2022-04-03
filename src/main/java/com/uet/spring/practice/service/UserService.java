@@ -28,6 +28,10 @@ public class UserService {
         }).orElseGet(() -> userRepository.findByName(name));
     }
 
+    public Optional<User> getById(int uid) {
+        return userRepository.findById(uid);
+    }
+
     public List<User> getAll() {
         return userRepository.findAll(PageRequest.of(0,2)).get().collect(Collectors.toList());
     }
