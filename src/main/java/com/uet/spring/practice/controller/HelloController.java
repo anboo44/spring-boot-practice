@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.models.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,6 +35,7 @@ public class HelloController {
     }
 
     @GetMapping("/api/v2/hello")
+//    @Secured("ADMIN")
     public HelloWorldDTO sayHelloV2() {
         return new HelloWorldDTO("Hello World");
     }
